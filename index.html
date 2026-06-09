@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KisanSahyog | Intelligent Edge Agronomy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #10B981; /* Modern Emerald Green */
+            --primary-dark: #059669;
+            --secondary: #34D399;
+            --accent: #F59E0B; /* Warning Orange */
+            --danger: #EF4444; /* Alert Red */
+            --treated: #3B82F6; /* Treated Blue */
+            --bg-main: #F3F4F6;
+            --bg-card: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-gray: #6B7280;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+
+        body { background-color: var(--bg-main); color: var(--text-dark); display: flex; overflow-x: hidden; }
+
+        /* Modern Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            height: 100vh;
+            padding: 24px;
+            position: fixed;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 1.4rem; font-weight: 800; color: var(--primary-dark);
+            margin-bottom: 40px; display: flex; align-items: center; gap: 12px;
+        }
+        .brand i { font-size: 1.8rem; color: var(--primary); }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px; margin-bottom: 8px;
+            color: var(--text-gray); font-weight: 600;
+            text-decoration: none; border-radius: 12px;
+            transition: all 0.3s ease; cursor: pointer;
+        }
+
+        .nav-link:hover { background: #ECFDF5; color: var(--primary-dark); }
+        .nav-link.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
+        /* Main Content Layout */
+        .main-content { margin-left: 260px; padding: 32px; width: calc(100% - 260px); }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .top-bar h1 { font-size: 1.8rem; color: var(--text-dark); }
+        .top-bar p { color: var(--text-gray); margin-top: 4px; }
+        
+        .actions { display: flex; align-items: center; gap: 20px; }
+        .notification { position: relative; cursor: pointer; font-size: 1.2rem; color: var(--text-gray); }
+        .badge { position: absolute; top: -5px; right: -8px; background: var(--danger); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: bold;}
+
+        /* Views */
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active-view { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards & Grids */
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px; }
+
+        .card { background: var(--bg-card); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .card-header h3 { font-size: 1.1rem; color: var(--text-gray); font-weight: 600; }
+        
+        .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); }
+        .metric-trend { font-size: 0.9rem; font-weight: 600; margin-top: 8px; display: flex; align-items: center; gap: 5px;}
+        .trend-good { color: var(--primary); }
+        .trend-bad { color: var(--danger); }
+
+        /* Hardware Diagnostics */
+        .hardware-list { list-style: none; }
+        .hardware-list li { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F3F4F6; font-size: 0.95rem;}
+        .hardware-list li:last-child { border: none; }
+        .status-dot { height: 10px; width: 10px; background-color: var(--primary); border-radius: 50%; display: inline-block; margin-right: 8px;}
+
+        /* Buttons */
+        .btn { padding: 14px 28px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;}
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: white; color: var(--danger); border: 2px solid var(--danger); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none;}
+
+        /* Field Heatmap */
+        .map-legend { display: flex; gap: 15px; margin-bottom: 15px; font-size: 0.9rem; font-weight: 600; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-box { width: 16px; height: 16px; border-radius: 4px; }
+        
+        .field-grid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; background: #E5E7EB; padding: 4px; border-radius: 8px;}
+        .field-cell { aspect-ratio: 1; background: #D1D5DB; border-radius: 3px; transition: background 0.5s ease; }
+        
+        .cell-scanned { background: var(--primary); } /* Healthy */
+        .cell-infected { background: var(--danger); animation: pulse 1.5s infinite; }
+        .cell-treated { background: var(--treated); }
+        
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* Toast Notifications (SMS Simulation) */
+        #toast-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 1000;}
+        .toast { background: var(--text-dark); color: white; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: slideIn 0.3s ease forwards; opacity: 0; transform: translateX(100%); }
+        .toast i { color: var(--accent); font-size: 1.2rem; }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand"><i class="fa-solid fa-leaf"></i> KisanSahyog</div>
+        <nav>
+            <a class="nav-link active" data-target="dashboard-view"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a class="nav-link" data-target="maps-view"><i class="fa-solid fa-map-location-dot"></i> Field Heatmap</a>
+            <a class="nav-link" data-target="settings-view"><i class="fa-solid fa-sliders"></i> Edge Settings</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="top-bar">
+            <div>
+                <h1 id="pageTitle">Mission Dashboard</h1>
+                <p>Autonomous Precision Spraying via Edge ML</p>
+            </div>
+            <div class="actions">
+                <div class="card" style="padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: none; border: 1px solid #E5E7EB;">
+                    <i class="fa-solid fa-cloud-sun text-gray"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;">Wind: 4 km/h | Safe to Spray</span>
+                </div>
+                <div class="notification" id="bellIcon">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge" id="smsCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-view" class="view-section active-view">
+            
+            <div class="grid-4">
+                <div class="card">
+                    <div class="card-header"><h3>Total Area Scanned</h3> <i class="fa-solid fa-maximize" style="color: var(--primary)"></i></div>
+                    <div class="metric-value" id="areaScanned">0 <span style="font-size: 1rem; color: var(--text-gray)">sq.m</span></div>
+                    <div class="metric-trend trend-good"><i class="fa-solid fa-arrow-trend-up"></i> +12% vs last run</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3>Infection Rate</h3> <i class="fa-solid fa-virus" style="color: var(--danger)"></i></div>
+                    <div class="metric-value" id="infectionRate" style="color: var(--danger);">0%</div>
+                    <div class="metric-trend trend-bad"><i class="fa-solid fa-circle-exclamation"></i> Powdery Mildew Detected</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3>Pesticide Saved</h3> <i class="fa-solid fa-droplet" style="color: var(--treated)"></i></div>
+                    <div class="metric-value" id="pesticideSaved" style="color: var(--treated)">0 <span style="font-size: 1rem; color: var(--text-gray)">ml</span></div>
+                    <div class="metric-trend trend-good"><i class="fa-solid fa-wallet"></i> Estimated ₹0 Saved</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3>Payload Tank</h3> <i class="fa-solid fa-flask" style="color: var(--text-gray)"></i></div>
+                    <div class="metric-value" id="tankLevel">100%</div>
+                    <div class="metric-trend" style="color: var(--text-gray)"><i class="fa-solid fa-check"></i> Pressure Stable</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">Command Center</h2>
+                    <p style="color: var(--text-gray); margin-bottom: 24px;">Initialize Jetson Nano inference engine and ESP32 valve actuation sequence.</p>
+                    <div style="display: flex; gap: 16px;">
+                        <button class="btn btn-primary" id="startBtn"><i class="fa-solid fa-plane-up"></i> Deploy System</button>
+                        <button class="btn btn-danger" id="stopBtn" disabled><i class="fa-solid fa-power-off"></i> Abort / RTB</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">Edge Telemetry</h2>
+                    <ul class="hardware-list">
+                        <li><span><span class="status-dot"></span>Jetson Nano Temp</span> <strong id="cpuTemp">42°C</strong></li>
+                        <li><span><span class="status-dot"></span>TinyML Latency</span> <strong id="infTime">18 ms</strong></li>
+                        <li><span><span class="status-dot"></span>Camera Feed</span> <strong>1080p @ 30fps</strong></li>
+                        <li><span><span class="status-dot" style="background-color: var(--treated)"></span>Valve Status (ESP32)</span> <strong id="valveStatus">CLOSED</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="maps-view" class="view-section">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h2 style="margin-bottom: 10px;">Live Infection Heatmap</h2>
+                        <div class="map-legend">
+                            <div class="legend-item"><div class="legend-box" style="background: #D1D5DB;"></div> Unscanned</div>
+                            <div class="legend-item"><div class="legend-box" style="background: var(--primary);"></div> Healthy</div>
+                            <div class="legend-item"><div class="legend-box" style="background: var(--danger);"></div> Infected</div>
+                            <div class="legend-item"><div class="legend-box" style="background: var(--treated);"></div> Treated (Sprayed)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-grid" id="fieldGrid"></div>
+            </div>
+        </div>
+
+        <div id="settings-view" class="view-section">
+            <div class="card">
+                <h2>SMS & Notification Settings</h2>
+                <p style="color: var(--text-gray); margin-top: 10px;">Configure thresholds for Twilio SMS alerts directly to the farmer's mobile.</p>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
+                <p><strong>Registered Farmer Mobile:</strong> +91 98765 43210</p>
+                <p style="margin-top: 10px;"><strong>Alert Trigger:</strong> Send SMS when local infection density exceeds 15%.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- UI NAVIGATION ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const viewSections = document.querySelectorAll('.view-section');
+            const pageTitle = document.getElementById('pageTitle');
+            const titles = { 'dashboard-view': 'Mission Dashboard', 'maps-view': 'Live Field Heatmap', 'settings-view': 'Edge System Settings' };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    viewSections.forEach(section => section.classList.remove('active-view'));
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active-view');
+                    pageTitle.innerText = titles[targetId];
+                });
+            });
+
+            // --- HEATMAP GENERATION ---
+            const gridContainer = document.getElementById('fieldGrid');
+            const totalCells = 150; // 15 columns x 10 rows
+            let cells = [];
+
+            for(let i=0; i<totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'field-cell';
+                gridContainer.appendChild(cell);
+                cells.push(cell);
+            }
+
+            // --- SIMULATION LOGIC ---
+            let missionInterval;
+            let currentCell = 0;
+            let infectedCount = 0;
+            let savedAmount = 0;
+            let tankLevel = 100;
+            let smsSent = 0;
+
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+
+            startBtn.addEventListener('click', () => {
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                
+                missionInterval = setInterval(() => {
+                    if(currentCell >= totalCells || tankLevel <= 0) {
+                        stopBtn.click();
+                        showToast("Mission Complete or Tank Empty", "fa-flag-checkered");
+                        return;
+                    }
+
+                    // Hardware Telemetry Fluctuation
+                    document.getElementById('cpuTemp').innerText = (42 + Math.random() * 5).toFixed(1) + '°C';
+                    document.getElementById('infTime').innerText = (15 + Math.random() * 8).toFixed(1) + ' ms';
+
+                    // AI Classification Simulation
+                    const isHealthy = Math.random() > 0.3; // 70% chance healthy
+                    
+                    if(isHealthy) {
+                        cells[currentCell].classList.add('cell-scanned');
+                        savedAmount += 10; // Saved 10ml by NOT spraying
+                        document.getElementById('valveStatus').innerText = "CLOSED";
+                        document.getElementById('valveStatus').style.color = "var(--text-dark)";
+                    } else {
+                        // Mark infected
+                        cells[currentCell].classList.add('cell-infected');
+                        infectedCount++;
+                        tankLevel -= 1.5;
+                        
+                        // Simulate Actuation (Spray)
+                        document.getElementById('valveStatus').innerText = "OPEN (SPRAYING)";
+                        document.getElementById('valveStatus').style.color = "var(--treated)";
+                        
+                        // Change to treated color after 800ms
+                        const targetCell = cells[currentCell];
+                        setTimeout(() => {
+                            targetCell.classList.remove('cell-infected');
+                            targetCell.classList.add('cell-treated');
+                        }, 800);
+
+                        // SMS Alert Logic: If infection rate is high suddenly
+                        if(infectedCount % 5 === 0) {
+                            sendSMSAlert(`Warning: High infection cluster detected at sector ${currentCell}. Pesticide applied.`);
+                        }
+                    }
+
+                    // Update Dashboard Metrics
+                    currentCell++;
+                    document.getElementById('areaScanned').innerText = currentCell;
+                    document.getElementById('infectionRate').innerText = ((infectedCount / currentCell) * 100).toFixed(1) + '%';
+                    document.getElementById('pesticideSaved').innerText = savedAmount;
+                    document.getElementById('tankLevel').innerText = tankLevel.toFixed(1) + '%';
+                    
+                    // Saved Money calc
+                    document.querySelector('.trend-good i.fa-wallet').parentElement.innerHTML = `<i class="fa-solid fa-wallet"></i> Estimated ₹${(savedAmount * 0.5).toFixed(0)} Saved`;
+
+                }, 400); // Drone moves every 400ms
+            });
+
+            stopBtn.addEventListener('click', () => {
+                clearInterval(missionInterval);
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                document.getElementById('valveStatus').innerText = "CLOSED (SAFE)";
+                document.getElementById('cpuTemp').innerText = "38.0°C";
+            });
+
+            // --- SMS / TOAST NOTIFICATION SYSTEM ---
+            function sendSMSAlert(message) {
+                smsSent++;
+                document.getElementById('smsCount').innerText = smsSent;
+                
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<i class="fa-solid fa-comment-sms"></i> <div><strong>SMS Sent to Farmer</strong><br><span style="font-size:0.85rem; color:#D1D5DB;">${message}</span></div>`;
+                
+                toastContainer.appendChild(toast);
+
+                // Remove toast after 4 seconds
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => toast.remove(), 300);
+                }, 4000);
+            }
+
+            function showToast(title, iconClass) {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> <div><strong>${title}</strong></div>`;
+                toastContainer.appendChild(toast);
+                setTimeout(() => { toast.remove(); }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
