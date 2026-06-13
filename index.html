@@ -3,370 +3,811 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KisanSahyog | Intelligent Edge Agronomy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>NEUROVISION X | Global Engineering Innovation</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <style>
+        /* === VIBRANT THEME VARIABLES === */
         :root {
-            --primary: #10B981; /* Modern Emerald Green */
-            --primary-dark: #059669;
-            --secondary: #34D399;
-            --accent: #F59E0B; /* Warning Orange */
-            --danger: #EF4444; /* Alert Red */
-            --treated: #3B82F6; /* Treated Blue */
-            --bg-main: #F3F4F6;
-            --bg-card: #FFFFFF;
-            --text-dark: #1F2937;
-            --text-gray: #6B7280;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            --radius: 16px;
+            --bg-color: #f4f7f6;
+            --surface-color: #ffffff;
+            --text-main: #1a1a24;
+            --text-muted: #5a6072;
+            
+            --brand-blue: #0055FF;
+            --brand-cyan: #00E5FF;
+            --brand-green: #00FF88;
+            --brand-pink: #FF3366;
+            
+            /* Advanced Glass Variables */
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-gradient: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 100%);
+            --glass-border-top: rgba(255, 255, 255, 0.8);
+            --glass-border-left: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 16px 40px rgba(0, 85, 255, 0.1);
+            
+            --wave-fill: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-
-        body { background-color: var(--bg-main); color: var(--text-dark); display: flex; overflow-x: hidden; }
-
-        /* Modern Sidebar */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-card);
-            height: 100vh;
-            padding: 24px;
-            position: fixed;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.02);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
+        [data-theme="dark"] {
+            --bg-color: #050608;
+            --surface-color: #0b0d14;
+            --text-main: #ffffff;
+            --text-muted: #a0a5b5;
+            
+            --glass-bg: rgba(11, 13, 20, 0.4);
+            --glass-gradient: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+            --glass-border-top: rgba(255, 255, 255, 0.15);
+            --glass-border-left: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            
+            --wave-fill: #0b0d14;
         }
 
-        .brand {
-            font-size: 1.4rem; font-weight: 800; color: var(--primary-dark);
-            margin-bottom: 40px; display: flex; align-items: center; gap: 12px;
+        /* === GLOBAL RESET & TYPOGRAPHY === */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; line-height: 1.6; }
+
+        /* Dynamic Background Blobs */
+        .blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.3; animation: floatBlob 20s infinite alternate ease-in-out; }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--brand-cyan); }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--brand-blue); animation-delay: -10s; }
+        @keyframes floatBlob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(10%, 10%) scale(1.2); } }
+
+        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
+        h2 { font-size: 3.5rem; text-align: center; margin-bottom: 3.5rem; position: relative; z-index: 2; background: linear-gradient(90deg, var(--text-main), var(--brand-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2::after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 5px; background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan)); border-radius: 5px; box-shadow: 0 0 15px var(--brand-cyan); }
+        section { padding: 120px 5%; position: relative; z-index: 10; }
+
+        /* === ADVANCED UI COMPONENTS === */
+        
+        /* 3D Glass Panel */
+        .glass-panel {
+            background: var(--glass-gradient);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--glass-border-top);
+            border-left: 1px solid var(--glass-border-left);
+            border-bottom: 1px solid transparent; border-right: 1px solid transparent;
+            border-radius: 24px; padding: 3rem;
+            box-shadow: var(--glass-shadow);
+            position: relative; overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
-        .brand i { font-size: 1.8rem; color: var(--primary); }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 16px; margin-bottom: 8px;
-            color: var(--text-gray); font-weight: 600;
-            text-decoration: none; border-radius: 12px;
-            transition: all 0.3s ease; cursor: pointer;
+        
+        /* Inner panel glow on hover */
+        .glass-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.1), transparent 70%);
+            opacity: 0; transition: opacity 0.5s ease; z-index: -1; pointer-events: none;
         }
+        .glass-panel:hover::before { opacity: 1; }
 
-        .nav-link:hover { background: #ECFDF5; color: var(--primary-dark); }
-        .nav-link.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-
-        /* Main Content Layout */
-        .main-content { margin-left: 260px; padding: 32px; width: calc(100% - 260px); }
-
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .top-bar h1 { font-size: 1.8rem; color: var(--text-dark); }
-        .top-bar p { color: var(--text-gray); margin-top: 4px; }
+        /* Advanced Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan)); color: #fff;
+            border: none; padding: 16px 36px; font-size: 1.05rem; font-weight: 700; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            position: relative; overflow: hidden; z-index: 1;
+        }
+        /* Button shine effect */
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg); transition: 0.5s; z-index: -1;
+        }
+        .btn:hover::after { left: 150%; }
+        .btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(0, 229, 255, 0.5); }
         
-        .actions { display: flex; align-items: center; gap: 20px; }
-        .notification { position: relative; cursor: pointer; font-size: 1.2rem; color: var(--text-gray); }
-        .badge { position: absolute; top: -5px; right: -8px; background: var(--danger); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: bold;}
+        .btn-outline { background: transparent; border: 2px solid var(--brand-cyan); color: var(--text-main); box-shadow: none; }
+        .btn-outline:hover { background: var(--brand-cyan); color: #000; }
 
-        /* Views */
-        .view-section { display: none; animation: fadeIn 0.4s ease; }
-        .view-section.active-view { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* === ANIMATION CLASSES === */
+        .reveal-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .active-reveal { opacity: 1; transform: translate(0,0) scale(1); }
 
-        /* Cards & Grids */
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px; }
-        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px; }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
 
-        .card { background: var(--bg-card); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .card-header h3 { font-size: 1.1rem; color: var(--text-gray); font-weight: 600; }
+        /* === NAVIGATION & TOP CONTROLS === */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 15px 5%; display: flex;
+            justify-content: space-between; align-items: center; z-index: 1000;
+            background: var(--glass-gradient); backdrop-filter: blur(24px); 
+            border-bottom: 1px solid var(--glass-border-top); box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-controls { display: flex; align-items: center; gap: 15px; }
+        .nav-links { display: flex; gap: 25px; align-items: center; margin-right: 15px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.95rem; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--brand-cyan); transition: 0.3s; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Icon Buttons & Fixed Translate */
+        .icon-btn { background: var(--glass-bg); border: 1px solid var(--brand-cyan); color: var(--text-main); width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); }
+        .icon-btn:hover { background: var(--brand-cyan); color: #000; transform: scale(1.1) rotate(5deg); box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+
+        .translate-wrapper { position: relative; width: 45px; height: 45px; border-radius: 50%; overflow: hidden; }
+        #google_translate_element { position: absolute; top: -20px; left: -20px; width: 200px; height: 200px; opacity: 0; cursor: pointer; z-index: 10; }
+        .goog-te-banner-frame { display: none !important; } body { top: 0 !important; }
+
+        /* Ticker Tape */
+        .ticker-wrap { width: 100%; background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan)); color: #fff; padding: 10px 0; overflow: hidden; position: fixed; top: 76px; z-index: 999; font-weight: 700; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .ticker { display: inline-block; white-space: nowrap; padding-left: 100%; animation: ticker 25s linear infinite; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+        /* SVG Dividers */
+        .wave-divider { position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; z-index: 1; pointer-events: none;}
+        .wave-divider svg { display: block; width: calc(100% + 1.3px); height: 80px; }
+        .wave-divider .shape-fill { fill: var(--wave-fill); transition: fill 0.4s ease; }
+
+        /* === SECTIONS === */
         
-        .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); }
-        .metric-trend { font-size: 0.9rem; font-weight: 600; margin-top: 8px; display: flex; align-items: center; gap: 5px;}
-        .trend-good { color: var(--primary); }
-        .trend-bad { color: var(--danger); }
-
-        /* Hardware Diagnostics */
-        .hardware-list { list-style: none; }
-        .hardware-list li { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F3F4F6; font-size: 0.95rem;}
-        .hardware-list li:last-child { border: none; }
-        .status-dot { height: 10px; width: 10px; background-color: var(--primary); border-radius: 50%; display: inline-block; margin-right: 8px;}
-
-        /* Buttons */
-        .btn { padding: 14px 28px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;}
-        .btn:active { transform: scale(0.97); }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-danger { background: white; color: var(--danger); border: 2px solid var(--danger); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none;}
-
-        /* Field Heatmap */
-        .map-legend { display: flex; gap: 15px; margin-bottom: 15px; font-size: 0.9rem; font-weight: 600; }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-box { width: 16px; height: 16px; border-radius: 4px; }
+        /* 1. Hero */
+        #hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 100px; }
+        #particles-js { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+        .hero-title { font-size: 6rem; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: titleGlow 4s infinite alternate; }
+        @keyframes titleGlow { 0% { text-shadow: 0 0 20px rgba(0, 229, 255, 0); } 100% { text-shadow: 0 0 40px rgba(0, 229, 255, 0.4); } }
+        .hero-title span { color: var(--brand-cyan); }
+        .typed-text { font-size: 1.8rem; font-weight: 600; color: var(--brand-pink); margin-bottom: 40px; min-height: 40px; }
         
-        .field-grid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; background: #E5E7EB; padding: 4px; border-radius: 8px;}
-        .field-cell { aspect-ratio: 1; background: #D1D5DB; border-radius: 3px; transition: background 0.5s ease; }
-        
-        .cell-scanned { background: var(--primary); } /* Healthy */
-        .cell-infected { background: var(--danger); animation: pulse 1.5s infinite; }
-        .cell-treated { background: var(--treated); }
-        
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        /* 2. Digital Brain */
+        #brain-container { width: 100%; height: 500px; border-radius: 20px; overflow: hidden; background: #000; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
 
-        /* Toast Notifications (SMS Simulation) */
-        #toast-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 1000;}
-        .toast { background: var(--text-dark); color: white; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: slideIn 0.3s ease forwards; opacity: 0; transform: translateX(100%); }
-        .toast i { color: var(--accent); font-size: 1.2rem; }
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        /* 3. Simulator */
+        .simulator-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        .video-container { position: relative; width: 100%; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+        #webcam-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
+        #sim-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+        .controls-panel { display: flex; flex-direction: column; gap: 20px; }
+        .control-group { background: var(--surface-color); padding: 20px; border-radius: 16px; border: 1px solid var(--glass-border-left); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        /* Custom Switch */
+        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-weight: 600; font-size: 0.9rem;}
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--text-muted); transition: .4s; border-radius: 34px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        input:checked + .slider { background-color: var(--brand-cyan); }
+        input:checked + .slider:before { transform: translateX(24px); }
 
+        input[type=range] { width: 100%; accent-color: var(--brand-cyan); margin-top: 15px; height: 6px; border-radius: 5px; outline: none; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .stat-box { background: var(--surface-color); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid var(--glass-border-left); transition: 0.3s; }
+        .stat-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,229,255,0.1); border-color: var(--brand-cyan); }
+        .stat-value { font-size: 2.2rem; font-weight: 900; background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 5px; }
+
+        /* 4. Architecture */
+        .arch-flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 50px; }
+        .arch-node { padding: 20px 25px; background: var(--surface-color); border-top: 2px solid var(--glass-border-top); border-left: 4px solid var(--brand-cyan); border-radius: 16px; font-weight: bold; text-align: center; min-width: 180px; box-shadow: var(--glass-shadow); transition: 0.3s; }
+        .arch-node:hover { transform: scale(1.05); background: linear-gradient(135deg, var(--surface-color), rgba(0,229,255,0.1)); }
+        .arch-arrow { color: var(--brand-pink); font-size: 2rem; animation: pulseArrow 1.5s infinite; }
+        @keyframes pulseArrow { 0% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(10px); opacity: 1; } 100% { transform: translateX(0); opacity: 0.5; } }
+
+        /* 5. STDP Visualizer */
+        .neurons-wrapper { display: flex; align-items: center; justify-content: center; width: 100%; height: 200px; position: relative; margin: 40px 0; }
+        .neuron { width: 90px; height: 90px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 30px rgba(0,85,255,0.5); font-size: 1.2rem; }
+        .synapse { position: absolute; height: 6px; background: var(--text-muted); width: 280px; z-index: 1; transition: 0.3s; border-radius: 3px; }
+        .spike { position: absolute; width: 24px; height: 24px; background: #fff; border-radius: 50%; opacity: 0; z-index: 3; box-shadow: 0 0 20px #fff, 0 0 40px var(--brand-cyan); }
+
+        /* 6. Battle Arena */
+        .arena-container { display: flex; justify-content: space-between; gap: 40px; margin-top: 50px; }
+        .competitor { flex: 1; text-align: center; background: var(--surface-color); padding: 40px 30px; border-radius: 24px; border: 1px solid var(--glass-border-left); box-shadow: var(--glass-shadow); transition: 0.3s; }
+        .competitor:hover { transform: translateY(-10px); }
+        .bar-container { height: 280px; width: 80px; background: rgba(128,128,128,0.1); margin: 30px auto; border-radius: 40px; position: relative; overflow: hidden; box-shadow: inset 0 5px 15px rgba(0,0,0,0.1); border: 1px solid var(--glass-border-top); }
+        .bar-fill { position: absolute; bottom: 0; width: 100%; height: 0%; border-radius: 40px; transition: height 2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        /* Animated Stripes on progress bars */
+        .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 10px, transparent 10px, transparent 20px); background-size: 28px 28px; animation: moveStripes 1s linear infinite; }
+        @keyframes moveStripes { 100% { background-position: 28px 0; } }
+        #trad-bar { background: linear-gradient(to top, #ff0844, #ffb199); }
+        #neuro-bar { background: linear-gradient(to top, var(--brand-blue), var(--brand-cyan)); }
+
+        /* 7. Command Center */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .chart-container { width: 100%; height: 320px; margin-top: 20px; }
+
+        /* 8. Event Reconstruction */
+        .recon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: center; }
+        .recon-box { padding: 50px; border: 2px dashed var(--brand-cyan); border-radius: 24px; background: var(--surface-color); transition: 0.3s; }
+        .recon-box:hover { border-style: solid; box-shadow: 0 10px 30px rgba(0,229,255,0.1); transform: scale(1.02); }
+        .storage-bar { width: 100%; height: 30px; background: rgba(128,128,128,0.1); border-radius: 15px; margin-top: 25px; overflow: hidden; position: relative; border: 1px solid var(--glass-border-top); }
+        .storage-fill { height: 100%; background: var(--text-muted); width: 100%; position: absolute; left: 0; }
+        #neuro-storage { width: 4%; background: linear-gradient(90deg, var(--brand-green), var(--brand-cyan)); z-index: 2; box-shadow: 0 0 15px var(--brand-green); }
+
+        /* 9. Smart City Ecosystem */
+        .eco-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .eco-icon { font-size: 3.5rem; margin-bottom: 25px; display: inline-flex; align-items: center; justify-content: center; width: 90px; height: 90px; background: linear-gradient(135deg, var(--surface-color), rgba(0,229,255,0.1)); border: 1px solid var(--glass-border-left); border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        /* 10. Alignment Checklist */
+        .checklist { max-width: 800px; margin: 0 auto; }
+        .check-item { display: flex; align-items: center; padding: 25px; border-bottom: 1px solid var(--glass-border-left); font-size: 1.15rem; font-weight: 600; transition: 0.3s; border-radius: 12px;}
+        .check-item:hover { background: rgba(0,255,136,0.05); transform: translateX(10px); }
+        .check-circle { width: 36px; height: 36px; border: 3px solid var(--brand-green); border-radius: 50%; margin-right: 25px; display: flex; align-items: center; justify-content: center; background: rgba(0,255,136,0.1); color: var(--brand-green); font-weight: bold; font-size: 1.2rem; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+        .check-circle::after { content: '✓'; }
+
+        /* 11. Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
+        .metric-number { font-size: 5.5rem; font-weight: 900; background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 15px; text-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        /* 12. Timeline */
+        .timeline { border-left: 4px solid var(--brand-cyan); padding-left: 40px; margin-left: 20px; }
+        .time-node { margin-bottom: 50px; position: relative; padding: 20px; background: var(--surface-color); border-radius: 16px; border: 1px solid var(--glass-border-left); box-shadow: var(--glass-shadow); transition: 0.3s; }
+        .time-node:hover { transform: translateX(10px); border-color: var(--brand-cyan); }
+        .time-node::before { content: ''; position: absolute; left: -54px; top: 30px; width: 24px; height: 24px; background: var(--brand-blue); border-radius: 50%; box-shadow: 0 0 0 6px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.8); }
+        
+        /* 13. Team */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+
+        /* Footer Top Scroll */
+        #scroll-top { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan)); color: #fff; width: 55px; height: 55px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; box-shadow: 0 10px 25px rgba(0, 229, 255, 0.4); }
+        #scroll-top.visible { opacity: 1; pointer-events: all; }
+        #scroll-top:hover { transform: translateY(-5px) scale(1.1); }
+
+        footer { background: var(--surface-color); padding: 100px 5% 50px 5%; text-align: center; border-top: 1px solid var(--glass-border-top); position: relative; z-index: 10; }
+
+        @media (max-width: 1024px) {
+            .simulator-grid, .dashboard-grid, .arena-container, .recon-grid, .metrics-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            h2 { font-size: 2.5rem; }
+            .hero-title { font-size: 4rem; }
+            section { padding: 80px 5%; }
+        }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="sidebar">
-        <div class="brand"><i class="fa-solid fa-leaf"></i> KisanSahyog</div>
-        <nav>
-            <a class="nav-link active" data-target="dashboard-view"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-            <a class="nav-link" data-target="maps-view"><i class="fa-solid fa-map-location-dot"></i> Field Heatmap</a>
-            <a class="nav-link" data-target="settings-view"><i class="fa-solid fa-sliders"></i> Edge Settings</a>
-        </nav>
-    </div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    <div class="main-content">
-        
-        <div class="top-bar">
-            <div>
-                <h1 id="pageTitle">Mission Dashboard</h1>
-                <p>Autonomous Precision Spraying via Edge ML</p>
+    <nav>
+        <div class="logo">NEUROVISION <span>X</span></div>
+        <div class="nav-controls">
+            <div class="nav-links">
+                <a href="#simulator">Live Engine</a>
+                <a href="#dashboard">Telemetry</a>
+                <a href="#architecture">Hardware Logic</a>
             </div>
-            <div class="actions">
-                <div class="card" style="padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: none; border: 1px solid #E5E7EB;">
-                    <i class="fa-solid fa-cloud-sun text-gray"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">Wind: 4 km/h | Safe to Spray</span>
-                </div>
-                <div class="notification" id="bellIcon">
-                    <i class="fa-solid fa-bell"></i>
-                    <span class="badge" id="smsCount">0</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="dashboard-view" class="view-section active-view">
             
-            <div class="grid-4">
-                <div class="card">
-                    <div class="card-header"><h3>Total Area Scanned</h3> <i class="fa-solid fa-maximize" style="color: var(--primary)"></i></div>
-                    <div class="metric-value" id="areaScanned">0 <span style="font-size: 1rem; color: var(--text-gray)">sq.m</span></div>
-                    <div class="metric-trend trend-good"><i class="fa-solid fa-arrow-trend-up"></i> +12% vs last run</div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Infection Rate</h3> <i class="fa-solid fa-virus" style="color: var(--danger)"></i></div>
-                    <div class="metric-value" id="infectionRate" style="color: var(--danger);">0%</div>
-                    <div class="metric-trend trend-bad"><i class="fa-solid fa-circle-exclamation"></i> Powdery Mildew Detected</div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Pesticide Saved</h3> <i class="fa-solid fa-droplet" style="color: var(--treated)"></i></div>
-                    <div class="metric-value" id="pesticideSaved" style="color: var(--treated)">0 <span style="font-size: 1rem; color: var(--text-gray)">ml</span></div>
-                    <div class="metric-trend trend-good"><i class="fa-solid fa-wallet"></i> Estimated ₹0 Saved</div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Payload Tank</h3> <i class="fa-solid fa-flask" style="color: var(--text-gray)"></i></div>
-                    <div class="metric-value" id="tankLevel">100%</div>
-                    <div class="metric-trend" style="color: var(--text-gray)"><i class="fa-solid fa-check"></i> Pressure Stable</div>
-                </div>
+            <div class="translate-wrapper icon-btn" title="Translate Language">
+                <span>🌐</span>
+                <div id="google_translate_element"></div>
             </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">Command Center</h2>
-                    <p style="color: var(--text-gray); margin-bottom: 24px;">Initialize Jetson Nano inference engine and ESP32 valve actuation sequence.</p>
-                    <div style="display: flex; gap: 16px;">
-                        <button class="btn btn-primary" id="startBtn"><i class="fa-solid fa-plane-up"></i> Deploy System</button>
-                        <button class="btn btn-danger" id="stopBtn" disabled><i class="fa-solid fa-power-off"></i> Abort / RTB</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">Edge Telemetry</h2>
-                    <ul class="hardware-list">
-                        <li><span><span class="status-dot"></span>Jetson Nano Temp</span> <strong id="cpuTemp">42°C</strong></li>
-                        <li><span><span class="status-dot"></span>TinyML Latency</span> <strong id="infTime">18 ms</strong></li>
-                        <li><span><span class="status-dot"></span>Camera Feed</span> <strong>1080p @ 30fps</strong></li>
-                        <li><span><span class="status-dot" style="background-color: var(--treated)"></span>Valve Status (ESP32)</span> <strong id="valveStatus">CLOSED</strong></li>
-                    </ul>
-                </div>
-            </div>
+            
+            <button id="theme-toggle" class="icon-btn" title="Toggle Light/Dark Mode">☀️</button>
         </div>
+    </nav>
 
-        <div id="maps-view" class="view-section">
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <h2 style="margin-bottom: 10px;">Live Infection Heatmap</h2>
-                        <div class="map-legend">
-                            <div class="legend-item"><div class="legend-box" style="background: #D1D5DB;"></div> Unscanned</div>
-                            <div class="legend-item"><div class="legend-box" style="background: var(--primary);"></div> Healthy</div>
-                            <div class="legend-item"><div class="legend-box" style="background: var(--danger);"></div> Infected</div>
-                            <div class="legend-item"><div class="legend-box" style="background: var(--treated);"></div> Treated (Sprayed)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field-grid" id="fieldGrid"></div>
-            </div>
+    <div class="ticker-wrap">
+        <div class="ticker">
+            INNOVATION FOR SUSTAINABILITY &nbsp; | &nbsp; EDGE DEPLOYMENT OPTIMIZED &nbsp; | &nbsp; TINYML INTEGRATION &nbsp; | &nbsp; MICROSECOND LATENCY &nbsp; | &nbsp; REDUCING CARBON FOOTPRINT BY 94% &nbsp; | &nbsp; EVENT-DRIVEN SENSOR FUSION &nbsp; | &nbsp; INNOVATION FOR SUSTAINABILITY
         </div>
-
-        <div id="settings-view" class="view-section">
-            <div class="card">
-                <h2>SMS & Notification Settings</h2>
-                <p style="color: var(--text-gray); margin-top: 10px;">Configure thresholds for Twilio SMS alerts directly to the farmer's mobile.</p>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
-                <p><strong>Registered Farmer Mobile:</strong> +91 98765 43210</p>
-                <p style="margin-top: 10px;"><strong>Alert Trigger:</strong> Send SMS when local infection density exceeds 15%.</p>
-            </div>
-        </div>
-
     </div>
 
-    <div id="toast-container"></div>
+    <button id="scroll-top">↑</button>
+
+    <section id="hero">
+        <div id="particles-js"></div>
+        <div style="z-index: 2; position: relative;">
+            <h1 class="hero-title reveal-up">Engineering The <span>Future</span></h1>
+            <div class="typed-text reveal-up" style="transition-delay: 0.1s;"><span id="typed-output"></span></div>
+            <p class="reveal-up" style="font-size: 1.25rem; max-width: 750px; margin: 0 auto 40px auto; color: var(--text-muted); font-weight: 500; transition-delay: 0.2s;">
+                Abandoning continuous frame-based processing for event-driven neuromorphic intelligence. Built specifically for rigorous edge-deployment constraints.
+            </p>
+            <div class="reveal-up" style="display: flex; gap: 20px; justify-content: center; transition-delay: 0.3s;">
+                <a href="#simulator" class="btn">Launch Platform Engine</a>
+                <button class="btn btn-outline" onclick="readAloud()">AI Audio Briefing</button>
+            </div>
+        </div>
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,119.3,194.5,108.6,238.5,101.2,280.4,80.1,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section id="brain" style="background: var(--surface-color);">
+        <h2 class="reveal-up">Global Event-Driven Core</h2>
+        <div class="glass-panel reveal-scale tilt-card" style="padding:0; border: none;">
+            <div id="brain-container"></div>
+            <div style="position: absolute; bottom: 30px; left: 30px; background: rgba(0,0,0,0.6); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); border: 1px solid rgba(0,229,255,0.3);">
+                <p style="font-family: monospace; font-weight: bold; color: var(--brand-cyan); margin:0;">Computing Sparse Event Matrices...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="simulator">
+        <h2 class="reveal-up">Live Neuromorphic Vision</h2>
+        <div class="glass-panel simulator-grid reveal-up tilt-card">
+            <div class="video-section">
+                <div class="video-container">
+                    <video id="webcam-video" autoplay playsinline muted></video>
+                    <canvas id="sim-canvas"></canvas>
+                </div>
+                <div style="margin-top: 25px; display: flex; align-items: center; justify-content: space-between;">
+                    <button class="btn" id="start-cam-btn">Initialize Camera Feed</button>
+                    <span id="cam-status" style="font-weight: 600; color: var(--text-muted); background: var(--surface-color); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--glass-border-left);">Awaiting stream initialization...</span>
+                </div>
+            </div>
+            
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label style="font-weight: 700; display:flex; justify-content:space-between;"><span>Event Threshold</span> <span id="val-thresh" style="color: var(--brand-cyan)">30</span></label>
+                    <input type="range" id="sim-thresh" min="5" max="100" value="30">
+                    <div class="switch-container">
+                        <span>Auto-Adapt to Ambient Light</span>
+                        <label class="switch"><input type="checkbox" id="auto-thresh-toggle" checked><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="switch-container" style="margin-top:0;">
+                        <span>Enable ROI Subject Tracking</span>
+                        <label class="switch"><input type="checkbox" id="roi-toggle" checked><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: bold; color: var(--text-muted);">Events / Sec</div>
+                        <div class="stat-value" id="stat-events">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: bold; color: var(--text-muted);">Battery Life</div>
+                        <div class="stat-value" id="stat-battery" style="background: linear-gradient(90deg, var(--brand-green), var(--brand-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">4.2 Yrs</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline" id="export-csv-btn" style="width: 100%; border-radius: 16px; margin-top: 10px;">Download Telemetry (CSV)</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" style="background: var(--surface-color);">
+        <h2 class="reveal-up">Hardware & Signal Pipeline</h2>
+        <div class="glass-panel reveal-scale tilt-card">
+            <p style="text-align: center; max-width: 800px; margin: 0 auto; color: var(--text-muted); font-size: 1.1rem;">Built upon rigorous linear algebra and signal processing principles, the pipeline isolates meaningful frequency domains before passing localized spatial data via serial protocols.</p>
+            <div class="arch-flow">
+                <div class="arch-node">Dynamic Vision Sensor<br><span style="font-size: 0.85rem; color: var(--brand-cyan); font-weight: normal; margin-top:5px; display:block;">Asynchronous Input</span></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">Signal Processing<br><span style="font-size: 0.85rem; color: var(--brand-cyan); font-weight: normal; margin-top:5px; display:block;">FFT/DFT Isolation</span></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">Feature Extraction<br><span style="font-size: 0.85rem; color: var(--brand-cyan); font-weight: normal; margin-top:5px; display:block;">SVD Matrix Setup</span></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">TinyML Edge Model<br><span style="font-size: 0.85rem; color: var(--brand-cyan); font-weight: normal; margin-top:5px; display:block;">SNN Processing</span></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">Microcontroller<br><span style="font-size: 0.85rem; color: var(--brand-cyan); font-weight: normal; margin-top:5px; display:block;">ESP32 via UART/SPI</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stdp">
+        <h2 class="reveal-up">Spike Timing Dependent Plasticity</h2>
+        <div class="glass-panel reveal-up tilt-card" style="text-align: center;">
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem;">Adjusting synaptic weights dynamically based on temporal event correlation using LDU matrix decompositions.</p>
+            <div class="neurons-wrapper">
+                <div class="neuron" id="neuron-pre">PRE</div>
+                <div class="synapse" id="synapse-link"></div>
+                <div class="spike" id="spike-particle"></div>
+                <div class="neuron" id="neuron-post" style="background: linear-gradient(135deg, var(--brand-pink), #ff758c); box-shadow: 0 0 30px rgba(255,51,102,0.5);">POST</div>
+            </div>
+            <div style="font-size: 1.6rem; font-weight: bold; margin-bottom: 30px;">Weight Matrix Element (W_ij): <span id="weight-val" style="color: var(--brand-cyan); display: inline-block; min-width: 60px;">1.0</span></div>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <button class="btn" onclick="fireSpike('strengthen')">Correlated Fire (Strengthen)</button>
+                <button class="btn btn-outline" style="border-color: var(--brand-pink);" onclick="fireSpike('weaken')">Uncorrelated Fire (Weaken)</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="arena" style="background: var(--surface-color);">
+        <h2 class="reveal-up">Energy Impact Benchmark</h2>
+        <div class="glass-panel reveal-up">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn" onclick="runBenchmark()">Execute Live Simulation</button>
+            </div>
+            <div class="arena-container">
+                <div class="competitor tilt-card">
+                    <h3 style="font-size: 1.8rem;">Standard CNN</h3>
+                    <p style="color: var(--text-muted); font-weight: bold;">Dense Frame AI</p>
+                    <div class="bar-container"><div class="bar-fill" id="trad-bar"></div></div>
+                    <div style="font-size: 1.4rem; font-weight: bold; background: var(--surface-color); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border-top);">Energy: <span id="trad-power" style="color: var(--brand-pink);">0 mWh</span></div>
+                </div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--text-muted); display: flex; align-items: center; justify-content: center; text-shadow: 0 5px 15px rgba(0,0,0,0.1);">VS</div>
+                <div class="competitor tilt-card" style="border: 2px solid var(--brand-cyan); background: linear-gradient(135deg, var(--surface-color), rgba(0,229,255,0.05));">
+                    <h3 style="font-size: 1.8rem;">NeuroVision X</h3>
+                    <p style="color: var(--brand-cyan); font-weight: bold;">Event Driven AI</p>
+                    <div class="bar-container"><div class="bar-fill" id="neuro-bar"></div></div>
+                    <div style="font-size: 1.4rem; font-weight: bold; background: var(--surface-color); padding: 15px; border-radius: 12px; border: 1px solid var(--brand-cyan);">Energy: <span id="neuro-power" style="color: var(--brand-cyan);">0 mWh</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard">
+        <h2 class="reveal-up">Live Advanced Telemetry</h2>
+        <div class="dashboard-grid">
+            <div class="glass-panel reveal-left tilt-card">
+                <h4>Dynamic Bandwidth Throughput</h4>
+                <div class="chart-container"><canvas id="chart-throughput"></canvas></div>
+            </div>
+            <div class="glass-panel reveal-right tilt-card">
+                <h4>System Latency Comparison</h4>
+                <div class="chart-container"><canvas id="chart-latency"></canvas></div>
+            </div>
+            <div class="glass-panel reveal-left tilt-card">
+                <h4>Power Distribution (Polar)</h4>
+                <div class="chart-container"><canvas id="chart-polar"></canvas></div>
+            </div>
+            <div class="glass-panel reveal-right tilt-card">
+                <h4>Subspace Feature Efficiency (Radar)</h4>
+                <div class="chart-container"><canvas id="chart-radar"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reconstruction" style="background: var(--surface-color);">
+        <h2 class="reveal-up">Data Storage Optimization</h2>
+        <div class="glass-panel recon-grid reveal-scale tilt-card">
+            <div class="recon-box">
+                <h3 style="font-size: 1.5rem;">Standard Video Feed</h3>
+                <p style="color: var(--text-muted); margin-top: 10px; font-weight: bold;">RGB Continuous Storage</p>
+                <div class="storage-bar"><div class="storage-fill"></div></div>
+                <h2 style="margin-top: 25px; font-size: 3rem;">150 MB <span style="font-size: 1.2rem; color: var(--text-muted);">/ min</span></h2>
+            </div>
+            <div class="recon-box" style="border-color: var(--brand-green); background: linear-gradient(135deg, var(--surface-color), rgba(0,255,136,0.05));">
+                <h3 style="font-size: 1.5rem;">Sparse Event Stream</h3>
+                <p style="color: var(--brand-green); margin-top: 10px; font-weight: bold;">Pixel-level AER Protocol</p>
+                <div class="storage-bar"><div class="storage-fill" id="neuro-storage"></div></div>
+                <h2 style="margin-top: 25px; font-size: 3rem; color: var(--brand-green);">6 MB <span style="font-size: 1.2rem; color: var(--text-muted);">/ min</span></h2>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosystem">
+        <h2 class="reveal-up">Real-World Deployment</h2>
+        <div class="eco-grid">
+            <div class="glass-panel reveal-up tilt-card">
+                <div class="eco-icon float-anim">🚜</div>
+                <h3 style="font-size: 1.4rem;">Precision Agriculture</h3>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-top: 15px;">Designed for resource-constrained embedded systems performing intelligent pesticide control in hilly, uneven agricultural regions.</p>
+            </div>
+            <div class="glass-panel reveal-up tilt-card" style="transition-delay: 0.1s;">
+                <div class="eco-icon float-anim" style="animation-delay: 0.5s;">🚦</div>
+                <h3 style="font-size: 1.4rem;">Smart Infrastructure</h3>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-top: 15px;">Microsecond latency for traffic and drone routing utilizing hardware UART interfaces for rapid multi-system communication.</p>
+            </div>
+            <div class="glass-panel reveal-up tilt-card" style="transition-delay: 0.2s;">
+                <div class="eco-icon float-anim" style="animation-delay: 1s;">🏭</div>
+                <h3 style="font-size: 1.4rem;">Industrial Monitoring</h3>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-top: 15px;">Applying Discrete Fourier Transforms (DFT) at the edge to analyze vibration anomalies on sub-milliwatt power budgets.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="alignment" style="background: var(--surface-color);">
+        <h2 class="reveal-up">System Specifications Met</h2>
+        <div class="glass-panel checklist reveal-scale tilt-card">
+            <div class="check-item"><div class="check-circle"></div>Asynchronous Data Streaming Protocol</div>
+            <div class="check-item"><div class="check-circle"></div>Spike Timing Dependent Processing (STDP)</div>
+            <div class="check-item"><div class="check-circle"></div>Lightweight Edge Deployment (ESP32/Arduino)</div>
+            <div class="check-item"><div class="check-circle"></div>Real-Time Sensory Analysis (< 10ms Latency)</div>
+            <div class="check-item" style="border-bottom: none;"><div class="check-circle"></div>Sub-milliwatt Power Computing Efficiency</div>
+        </div>
+    </section>
+
+    <section id="metrics">
+        <div class="glass-panel metrics-grid reveal-up">
+            <div class="tilt-card"><div class="metric-number">90<span style="font-size: 2.5rem;">%</span></div><div style="font-weight:bold; font-size:1.1rem; color:var(--text-muted);">Compute Reduction</div></div>
+            <div class="tilt-card"><div class="metric-number">94<span style="font-size: 2.5rem;">%</span></div><div style="font-weight:bold; font-size:1.1rem; color:var(--text-muted);">Energy Savings</div></div>
+            <div class="tilt-card"><div class="metric-number">70<span style="font-size: 2.5rem;">%</span></div><div style="font-weight:bold; font-size:1.1rem; color:var(--text-muted);">Lower Latency</div></div>
+            <div class="tilt-card"><div class="metric-number">96<span style="font-size: 2.5rem;">%</span></div><div style="font-weight:bold; font-size:1.1rem; color:var(--text-muted);">Storage Reclaimed</div></div>
+        </div>
+    </section>
+
+    <section id="timeline" style="background: var(--surface-color);">
+        <h2 class="reveal-up">Future Development Roadmap</h2>
+        <div class="glass-panel reveal-up tilt-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="timeline">
+                <div class="time-node">
+                    <h3 style="color: var(--brand-cyan); font-size: 1.5rem;">2026 - Present Phase</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top:10px;">Initial deployment of TinyML models for agricultural pest detection.</p>
+                </div>
+                <div class="time-node">
+                    <h3 style="color: var(--brand-cyan); font-size: 1.5rem;">2028 - Integration</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top:10px;">Full smart-city grid integration utilizing I2C/SPI sensor arrays.</p>
+                </div>
+                <div class="time-node">
+                    <h3 style="color: var(--brand-cyan); font-size: 1.5rem;">2030 - Autonomous Scaling</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top:10px;">Large-scale infrastructure monitoring without cloud reliance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <h2 class="reveal-up">Engineering Vision</h2>
+        <div class="glass-panel team-grid reveal-scale tilt-card">
+            <div style="background: var(--surface-color); padding: 30px; border-radius: 16px; border: 1px solid var(--glass-border-left);">
+                <h3 style="border-bottom: 2px solid var(--brand-blue); padding-bottom: 15px; margin-bottom: 20px; font-size: 1.4rem;">Innovation Focus</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Bridging hardware interfacing and complex mathematical modeling to solve real-world efficiency bottlenecks.</p>
+            </div>
+            <div style="background: var(--surface-color); padding: 30px; border-radius: 16px; border: 1px solid var(--glass-border-left);">
+                <h3 style="border-bottom: 2px solid var(--brand-cyan); padding-bottom: 15px; margin-bottom: 20px; font-size: 1.4rem;">Academic Grounding</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Rooted in advanced university-level research in Cyber-Physical systems and Electronics/Communication Engineering.</p>
+            </div>
+            <div style="background: var(--surface-color); padding: 30px; border-radius: 16px; border: 1px solid var(--glass-border-left);">
+                <h3 style="border-bottom: 2px solid var(--brand-green); padding-bottom: 15px; margin-bottom: 20px; font-size: 1.4rem;">Global Impact</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Designing scalable systems specifically targeted to empower resource-constrained environments globally.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="margin-bottom: 10px; font-size: 3rem;">NEUROVISION <span style="color: var(--brand-cyan);">X</span></h2>
+        <p style="font-weight: bold; font-size: 1.3rem;">Brain-Inspired Intelligence for Sustainable Computing</p>
+        <p style="margin-top: 30px; color: var(--text-muted); font-size: 0.95rem; letter-spacing: 1px;">Built for Global Engineering Innovation Challenges &copy; 2026</p>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- UI NAVIGATION ---
-            const navLinks = document.querySelectorAll('.nav-link');
-            const viewSections = document.querySelectorAll('.view-section');
-            const pageTitle = document.getElementById('pageTitle');
-            const titles = { 'dashboard-view': 'Mission Dashboard', 'maps-view': 'Live Field Heatmap', 'settings-view': 'Edge System Settings' };
+        // --- 1. Google Translate API Initialization ---
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,hi,mr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    viewSections.forEach(section => section.classList.remove('active-view'));
-                    const targetId = this.getAttribute('data-target');
-                    document.getElementById(targetId).classList.add('active-view');
-                    pageTitle.innerText = titles[targetId];
-                });
+        // --- 2. Advanced Interactive UI (Tilt Effect) ---
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt
+                const rotateY = ((x - centerX) / centerX) * 5;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             });
-
-            // --- HEATMAP GENERATION ---
-            const gridContainer = document.getElementById('fieldGrid');
-            const totalCells = 150; // 15 columns x 10 rows
-            let cells = [];
-
-            for(let i=0; i<totalCells; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'field-cell';
-                gridContainer.appendChild(cell);
-                cells.push(cell);
-            }
-
-            // --- SIMULATION LOGIC ---
-            let missionInterval;
-            let currentCell = 0;
-            let infectedCount = 0;
-            let savedAmount = 0;
-            let tankLevel = 100;
-            let smsSent = 0;
-
-            const startBtn = document.getElementById('startBtn');
-            const stopBtn = document.getElementById('stopBtn');
-
-            startBtn.addEventListener('click', () => {
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-                
-                missionInterval = setInterval(() => {
-                    if(currentCell >= totalCells || tankLevel <= 0) {
-                        stopBtn.click();
-                        showToast("Mission Complete or Tank Empty", "fa-flag-checkered");
-                        return;
-                    }
-
-                    // Hardware Telemetry Fluctuation
-                    document.getElementById('cpuTemp').innerText = (42 + Math.random() * 5).toFixed(1) + '°C';
-                    document.getElementById('infTime').innerText = (15 + Math.random() * 8).toFixed(1) + ' ms';
-
-                    // AI Classification Simulation
-                    const isHealthy = Math.random() > 0.3; // 70% chance healthy
-                    
-                    if(isHealthy) {
-                        cells[currentCell].classList.add('cell-scanned');
-                        savedAmount += 10; // Saved 10ml by NOT spraying
-                        document.getElementById('valveStatus').innerText = "CLOSED";
-                        document.getElementById('valveStatus').style.color = "var(--text-dark)";
-                    } else {
-                        // Mark infected
-                        cells[currentCell].classList.add('cell-infected');
-                        infectedCount++;
-                        tankLevel -= 1.5;
-                        
-                        // Simulate Actuation (Spray)
-                        document.getElementById('valveStatus').innerText = "OPEN (SPRAYING)";
-                        document.getElementById('valveStatus').style.color = "var(--treated)";
-                        
-                        // Change to treated color after 800ms
-                        const targetCell = cells[currentCell];
-                        setTimeout(() => {
-                            targetCell.classList.remove('cell-infected');
-                            targetCell.classList.add('cell-treated');
-                        }, 800);
-
-                        // SMS Alert Logic: If infection rate is high suddenly
-                        if(infectedCount % 5 === 0) {
-                            sendSMSAlert(`Warning: High infection cluster detected at sector ${currentCell}. Pesticide applied.`);
-                        }
-                    }
-
-                    // Update Dashboard Metrics
-                    currentCell++;
-                    document.getElementById('areaScanned').innerText = currentCell;
-                    document.getElementById('infectionRate').innerText = ((infectedCount / currentCell) * 100).toFixed(1) + '%';
-                    document.getElementById('pesticideSaved').innerText = savedAmount;
-                    document.getElementById('tankLevel').innerText = tankLevel.toFixed(1) + '%';
-                    
-                    // Saved Money calc
-                    document.querySelector('.trend-good i.fa-wallet').parentElement.innerHTML = `<i class="fa-solid fa-wallet"></i> Estimated ₹${(savedAmount * 0.5).toFixed(0)} Saved`;
-
-                }, 400); // Drone moves every 400ms
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
             });
-
-            stopBtn.addEventListener('click', () => {
-                clearInterval(missionInterval);
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
-                document.getElementById('valveStatus').innerText = "CLOSED (SAFE)";
-                document.getElementById('cpuTemp').innerText = "38.0°C";
-            });
-
-            // --- SMS / TOAST NOTIFICATION SYSTEM ---
-            function sendSMSAlert(message) {
-                smsSent++;
-                document.getElementById('smsCount').innerText = smsSent;
-                
-                const toastContainer = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.innerHTML = `<i class="fa-solid fa-comment-sms"></i> <div><strong>SMS Sent to Farmer</strong><br><span style="font-size:0.85rem; color:#D1D5DB;">${message}</span></div>`;
-                
-                toastContainer.appendChild(toast);
-
-                // Remove toast after 4 seconds
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateX(100%)';
-                    setTimeout(() => toast.remove(), 300);
-                }, 4000);
-            }
-
-            function showToast(title, iconClass) {
-                const toastContainer = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> <div><strong>${title}</strong></div>`;
-                toastContainer.appendChild(toast);
-                setTimeout(() => { toast.remove(); }, 3000);
-            }
         });
+
+        // --- 3. Scroll Reveal Animations (Intersection Observer) ---
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active-reveal');
+                    observer.unobserve(entry.target); // Run once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- 4. Theme Toggle & Scroll Top ---
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            themeToggle.innerText = document.body.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+            updateChartsTheme();
+        });
+
+        const scrollTopBtn = document.getElementById('scroll-top');
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
+        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // --- 5. Typed.js & Particles.js ---
+        new Typed('#typed-output', {
+            strings: ['Intelligent Edge Deployments.', 'Optimizing Sub-milliwatt Systems.', 'Microsecond Sensory Analysis.', 'Global Sustainable Computing.'],
+            typeSpeed: 40, backSpeed: 20, backDelay: 2000, loop: true
+        });
+
+        particlesJS("particles-js", {
+            particles: { number: { value: 70 }, color: { value: ["#0055FF", "#00E5FF"] }, shape: { type: "circle" }, opacity: { value: 0.6 }, size: { value: 3 }, line_linked: { enable: true, distance: 150, color: "#00E5FF", opacity: 0.3, width: 1 }, move: { enable: true, speed: 2 } }
+        });
+
+        // --- 6. AI TTS Briefing ---
+        function readAloud() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance("Welcome to Neurovision X. Abandoning continuous frame-based processing for event-driven neuromorphic intelligence. Built for rigorous edge deployment constraints.");
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- 7. Three.js Digital Brain ---
+        const initThreeBrain = () => {
+            const container = document.getElementById('brain-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const count = 1200;
+            const posArray = new Float32Array(count * 3);
+            for(let i = 0; i < count * 3; i++) {
+                const r = 4.5;
+                const theta = Math.random() * 2 * Math.PI;
+                const phi = Math.acos(2 * Math.random() - 1);
+                posArray[i*3] = r * Math.sin(phi) * Math.cos(theta);
+                posArray[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+                posArray[i*3+2] = r * Math.cos(phi);
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const material = new THREE.PointsMaterial({ size: 0.05, color: 0x00E5FF, transparent: true, opacity: 0.8 });
+            const mesh = new THREE.Points(geometry, material);
+            scene.add(mesh);
+            camera.position.z = 6.5;
+
+            let mouseX = 0, mouseY = 0;
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+                mouseY = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+            });
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                mesh.rotation.y += 0.002; mesh.rotation.x += 0.001;
+                mesh.rotation.y += mouseX * 0.03; mesh.rotation.x -= mouseY * 0.03;
+                if(Math.random() > 0.96) material.color.setHex(Math.random() > 0.5 ? 0x0055FF : 0x00E5FF);
+                renderer.render(scene, camera);
+            };
+            animate();
+            window.addEventListener('resize', () => { camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(container.clientWidth, container.clientHeight); });
+        };
+        initThreeBrain();
+
+        // --- 8. Live Simulator Engine ---
+        const video = document.getElementById('webcam-video');
+        const canvas = document.getElementById('sim-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const startBtn = document.getElementById('start-cam-btn');
+        const threshSlider = document.getElementById('sim-thresh');
+        
+        let previousFrameData = null, isSimulating = false, animationId;
+        let globalEventRate = 0, sessionData = [], startTime = Date.now();
+
+        threshSlider.oninput = () => { document.getElementById('val-thresh').innerText = threshSlider.value; };
+
+        startBtn.addEventListener('click', async () => {
+            if(isSimulating) {
+                isSimulating = false; cancelAnimationFrame(animationId);
+                startBtn.innerText = "Initialize Camera Feed";
+                const stream = video.srcObject; if(stream) stream.getTracks().forEach(track => track.stop());
+                ctx.clearRect(0, 0, canvas.width, canvas.height); globalEventRate = 0;
+                document.getElementById('cam-status').innerText = "System Paused.";
+                return;
+            }
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    video.play(); isSimulating = true;
+                    startBtn.innerText = "Disconnect System";
+                    document.getElementById('cam-status').innerText = "Analyzing Live Telemetry...";
+                    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                    requestAnimationFrame(renderLoop);
+                };
+            } catch (err) { alert("Camera blocked. Please run via Local Server to grant permissions."); }
+        });
+
+        function renderLoop() {
+            if (!isSimulating || video.readyState !== video.HAVE_ENOUGH_DATA) return requestAnimationFrame(renderLoop);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const currentData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            const outputFrame = ctx.createImageData(canvas.width, canvas.height);
+            const outputData = outputFrame.data;
+
+            let eventCount = 0, totalBrightness = 0, sumX = 0, sumY = 0;
+            let threshold = parseInt(threshSlider.value);
+            const autoAdapt = document.getElementById('auto-thresh-toggle').checked;
+            const useROI = document.getElementById('roi-toggle').checked;
+
+            if (previousFrameData) {
+                for (let i = 0; i < currentData.length; i += 4) {
+                    const curGray = (currentData[i] + currentData[i+1] + currentData[i+2]) / 3;
+                    const prevGray = (previousFrameData[i] + previousFrameData[i+1] + previousFrameData[i+2]) / 3;
+                    totalBrightness += curGray; const diff = curGray - prevGray;
+
+                    if (Math.abs(diff) > threshold) {
+                        eventCount++; sumX += (i/4)%canvas.width; sumY += Math.floor((i/4)/canvas.width);
+                        if (diff > 0) { outputData[i] = 0; outputData[i+1] = 229; outputData[i+2] = 255; outputData[i+3] = 255; } 
+                        else { outputData[i] = 255; outputData[i+1] = 51; outputData[i+2] = 102; outputData[i+3] = 255; }
+                    } else { outputData[i]=0; outputData[i+1]=0; outputData[i+2]=0; outputData[i+3]=150; }
+                }
+                ctx.putImageData(outputFrame, 0, 0);
+
+                if(autoAdapt) {
+                    const dynamicThresh = Math.floor(((totalBrightness/(canvas.width*canvas.height))/255)*50)+10;
+                    threshSlider.value = dynamicThresh; document.getElementById('val-thresh').innerText = dynamicThresh + " (Auto)";
+                }
+
+                if(useROI && eventCount > 100) {
+                    const cX = sumX/eventCount, cY = sumY/eventCount;
+                    ctx.strokeStyle = '#00FF88'; ctx.lineWidth = 2; ctx.beginPath();
+                    ctx.rect(cX-40, cY-40, 80, 80); ctx.stroke();
+                }
+
+                document.getElementById('stat-events').innerText = eventCount; globalEventRate = eventCount;
+                let daysLeft = Math.max(10, 1825 - (eventCount*0.5));
+                document.getElementById('stat-battery').innerText = daysLeft > 365 ? (daysLeft/365).toFixed(1) + " Yrs" : Math.floor(daysLeft) + " Days";
+
+                if(Date.now() % 100 < 20) sessionData.push({ time: Math.floor((Date.now()-startTime)/1000), events: eventCount, bat: daysLeft });
+            }
+            previousFrameData = new Uint8ClampedArray(currentData);
+            animationId = requestAnimationFrame(renderLoop);
+        }
+
+        document.getElementById('export-csv-btn').addEventListener('click', () => {
+            if(sessionData.length===0) return alert("No data yet.");
+            let csv = "data:text/csv;charset=utf-8,Time,Events,BatteryDays\n" + sessionData.map(r=>`${r.time},${r.events},${r.bat.toFixed(1)}`).join('\n');
+            const link = document.createElement("a"); link.href = encodeURI(csv); link.download = "Telemetry.csv";
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        });
+
+        // --- 9. STDP Interactive Animation ---
+        let synWeight = 1.0;
+        function fireSpike(type) {
+            const spike = document.getElementById('spike-particle');
+            const link = document.getElementById('synapse-link');
+            gsap.set(spike, {x: -140, opacity: 1});
+            gsap.to(spike, {x: 140, duration: 0.5, ease: "power1.inOut", onComplete: () => {
+                gsap.set(spike, {opacity: 0});
+                if(type === 'strengthen' && synWeight < 5.0) { synWeight += 0.5; gsap.to(link, {height: synWeight*3+"px", backgroundColor: "#00E5FF", duration: 0.3}); } 
+                else if(type === 'weaken' && synWeight > 0.5) { synWeight -= 0.5; gsap.to(link, {height: synWeight*3+"px", backgroundColor: "#FF3366", duration: 0.3}); }
+                document.getElementById('weight-val').innerText = synWeight.toFixed(1);
+            }});
+        }
+
+        // --- 10. GSAP Benchmark Animation ---
+        function runBenchmark() {
+            const tl = gsap.timeline();
+            gsap.set("#trad-bar", {height: "0%"}); gsap.set("#neuro-bar", {height: "0%"});
+            tl.to("#trad-bar", {height: "98%", duration: 2, ease: "power2.inOut"})
+              .to({val: 0}, {val: 140, duration: 2, onUpdate: function() { document.getElementById('trad-power').innerText = Math.floor(this.targets()[0].val) + " mWh"; }}, "<")
+              .to("#neuro-bar", {height: "6%", duration: 1.5, ease: "power2.out"}, "-=1.5")
+              .to({val: 0}, {val: 8, duration: 1.5, onUpdate: function() { document.getElementById('neuro-power').innerText = Math.floor(this.targets()[0].val) + " mWh"; }}, "<");
+        }
+
+        // --- 11. Advanced Chart.js Setup ---
+        Chart.defaults.color = '#a0a5b5'; Chart.defaults.font.family = "'Inter', sans-serif";
+        const cOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+        
+        const cTp = new Chart(document.getElementById('chart-throughput'), { type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(0), borderColor: '#00E5FF', borderWidth: 3, fill: true, backgroundColor: 'rgba(0,229,255,0.1)', tension: 0.4 }] }, options: {...cOptions, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)'} } }} });
+        const cLat = new Chart(document.getElementById('chart-latency'), { type: 'bar', data: { labels: ['CNN', 'SNN Edge'], datasets: [{ data: [120, 18], backgroundColor: ['#FF3366', '#0055FF'], borderRadius: 10 }] }, options: {...cOptions, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)'} } }} });
+        const cPol = new Chart(document.getElementById('chart-polar'), { type: 'polarArea', data: { labels: ['Sensor Array', 'UART/SPI Tx', 'Core Process', 'Idle Leak'], datasets: [{ data: [30, 45, 15, 10], backgroundColor: ['rgba(0,85,255,0.7)', 'rgba(0,229,255,0.7)', 'rgba(0,255,136,0.7)', 'rgba(255,51,102,0.7)'] }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { grid: { color: 'rgba(255,255,255,0.05)'} } } } });
+        const cRad = new Chart(document.getElementById('chart-radar'), { type: 'radar', data: { labels: ['SVD Matrix', 'DFT Scope', 'Spatial Filter', 'Temporal Decay'], datasets: [{ label: 'Accuracy', data: [95, 88, 92, 75], borderColor: '#00FF88', borderWidth: 2, backgroundColor: 'rgba(0,255,136,0.2)' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' } } } } });
+
+        setInterval(() => {
+            if(isSimulating) {
+                cTp.data.datasets[0].data.shift(); cTp.data.datasets[0].data.push(globalEventRate * 0.1); cTp.update();
+            }
+        }, 500);
+
+        function updateChartsTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            Chart.defaults.color = isDark ? '#a0a5b5' : '#5a6072';
+            
+            cTp.options.scales.y.grid.color = gridColor;
+            cLat.options.scales.y.grid.color = gridColor;
+            cPol.options.scales.r.grid.color = gridColor;
+            cRad.options.scales.r.grid.color = gridColor;
+            cRad.options.scales.r.angleLines.color = gridColor;
+            
+            [cTp, cLat, cPol, cRad].forEach(c => c.update());
+        }
     </script>
 </body>
 </html>
